@@ -83,6 +83,7 @@ docs/                     architecture, deploy runbook, known issues
 | `secrets/<NAME>.sshpass` | SSH password for `<USER>@<IP>` of that worker |
 | `secrets/<NAME>.pw` | opencode serve API password (generated on worker, pulled back by P2) |
 | `secrets/auth.json` | opencode auth copied into every worker's `~/.local/share/opencode/` |
+| `secrets/zai_api_key` | z.ai standard-billing API key (for `scripts/auth_provider_key.sh zai secrets/zai_api_key`) |
 | `env/cluster.env` | your real IPs/names (copy of the example) |
 | `worker/notes.d/<NAME>.md` | optional per-worker machine facts injected into its AGENTS.md |
 

@@ -53,6 +53,18 @@ chmod 600 secrets/*
 `secrets/<NAME>.pw` (serve API passwords) are generated ON each worker by P2 and
 pulled back automatically — do not create them by hand.
 
+### Standard-billing provider keys (e.g. z.ai API key)
+
+If `OC_MODEL` uses a key-billed provider (`zai/glm-4.5-air` etc.), install the
+key into every worker's auth (merged in-place; existing OAuth entries are kept
+for rollback), then re-render config and restart:
+
+```bash
+bash scripts/auth_provider_key.sh zai secrets/zai_api_key
+bash scripts/p2_setup.sh   # re-renders opencode.json from OC_MODEL and restarts ocserve
+bash scripts/p4_e2e.sh     # verify roundtrip
+```
+
 ## 3. Deploy
 
 ```bash
