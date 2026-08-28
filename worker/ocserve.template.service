@@ -1,0 +1,17 @@
+[Unit]
+Description=opencode server (oc-cluster worker)
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Environment=HOME=/root
+Environment=OPENCODE_SERVER_PASSWORD=__PW__
+WorkingDirectory=/root/ocws
+ExecStart=/root/.opencode/bin/opencode serve --port __PORT__ --hostname 0.0.0.0
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+

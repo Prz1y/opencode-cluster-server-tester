@@ -1,0 +1,8 @@
+# site-specific values and secrets never enter the repo
+env/cluster.env
+secrets/
+worker/notes.d/
+*.pw
+*.tar.gz
+*.log
+__pycache__/
