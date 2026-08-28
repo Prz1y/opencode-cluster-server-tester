@@ -25,6 +25,11 @@ English | [中文](ARCHITECTURE.md)
 
 ## LLM egress for air-gapped workers
 
+> **Status (2026-08-28)**: the SSH reverse-tunnel design has been fully torn down
+> at the deployed site (user decision: no SSH/tunneling); workers currently have
+> NO LLM egress while a replacement is being evaluated. This section is kept as
+> a design reference.
+
 Workers often sit in whitelisted lab networks with no direct route to the LLM
 API. oc-cluster solves this without touching the egress policy:
 
