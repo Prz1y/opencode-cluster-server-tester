@@ -37,8 +37,10 @@ TOOL = {
 }
 
 
-def dispatch(name, prompt_path, wait):
+def dispatch(name, prompt_path, wait, task=None):
     cmd = ["bash", SCRIPT, name, prompt_path, str(wait)]
+    if task:
+        cmd.append(task)
     try:
         p = subprocess.run(cmd, capture_output=True, text=True, timeout=wait + 120)
         return p.stdout, p.stderr, p.returncode
@@ -69,7 +71,7 @@ def tool_call(args):
     with os.fdopen(fd, "w", encoding="utf-8") as f:
         f.write(prompt)
     try:
-        out, err, rc = dispatch(worker, pf, wait)
+        out, err, rc = dispatch(worker, pf, wait, task)
     finally:
         try:
             os.unlink(pf)

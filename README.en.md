@@ -24,6 +24,9 @@ Documentation in this repo is maintained bilingually: Chinese is the primary
 `*.md`, English lives in `*.en.md`. Every future docs update must ship both a
 Chinese and an English copy in the same change.
 
+Dev working notes (`docs/dev/DEVLOG.md` and `docs/dev/ISSUES.md`) are
+Chinese-only working documents and are exempt from the bilingual rule.
+
 ## Features
 
 - **Env-driven topology** — all machines/ports/models live in one
@@ -80,6 +83,7 @@ scripts/p55_a2a.sh        render+push per-worker peers.json (A2A directory)
 scripts/p6_drill.sh       memory journal drill + tunnel self-heal drill
 scripts/upgrade_opencode.sh  rolling binary upgrade with backup+restore
 scripts/dispatch_task.sh     orchestrator-side task dispatcher (WSL): session + blocking prompt
+scripts/oc.sh                orchestrator single entry (list/exec/run/fetch/put/task)
 orchestrator/mcp_remote_task.py  MCP stdio server: exposes dispatch as a native `remote_task`
                              tool for the orchestrator's own opencode (runs inside WSL)
 wsl/tunnel.sh             single reverse LLM tunnel loop (worker lo:443 -> LLM:443)

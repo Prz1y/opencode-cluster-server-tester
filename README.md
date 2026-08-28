@@ -12,6 +12,8 @@
 
 本仓库文档以中英双语维护：中文版为 `*.md`，英文版为 `*.en.md`。后续每一次文档更新必须中英文各一份同步修改。
 
+开发工作笔记（`docs/dev/` 下的 `DEVLOG.md` 与 `ISSUES.md`）为中文单语工作文档，不入双语流程。
+
 ## 特性
 
 - **环境变量驱动拓扑** — 所有机器/端口/模型集中在一个 `env/cluster.env` 里；新增一个 worker 只需加一段配置再重跑一次。
@@ -59,6 +61,7 @@ scripts/p55_a2a.sh        渲染并推送每 worker 的 peers.json（A2A 目录�
 scripts/p6_drill.sh       记忆 journal 演练 + 隧道自愈演练
 scripts/upgrade_opencode.sh  滚动升级二进制，带备份+恢复
 scripts/dispatch_task.sh     编排器侧任务派发器（WSL）：建会话 + 阻塞式发 prompt
+scripts/oc.sh               编排器一站式入口（list/exec/run/fetch/put/task）
 orchestrator/mcp_remote_task.py  MCP stdio server：把派发暴露成编排器 opencode 的
                              原生 `remote_task` 工具（跑在 WSL 内）
 wsl/tunnel.sh             单条反向 LLM 隧道循环（worker lo:443 -> LLM:443）

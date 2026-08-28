@@ -3,6 +3,7 @@ env/cluster.env
 secrets/
 worker/notes.d/
 .tmp/
+logs/
 *.pw
 *.tar.gz
 *.log
