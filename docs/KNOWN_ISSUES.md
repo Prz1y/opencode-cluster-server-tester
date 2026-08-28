@@ -82,3 +82,15 @@
 - `systemctl enable --now` 不会重启已运行的服务——P2 重跑即使更新了
   `opencode.json` 或 `auth.json`，旧进程仍按旧配置/旧凭据服务。因此 P2
   payload 无条件执行 `systemctl enable` + `systemctl restart`。
+
+## 11. firewalld 拒绝不开放端口的方式极具迷惑性（icmp-host-prohibited）
+
+- RHEL 系 firewalld public zone 对未开放端口的 TCP SYN 是 REJECT（回
+  `ICMP host unreachable - admin prohibited filter`），不是静默丢弃。发起方
+  内核把该 ICMP 转成 EHOSTUNREACH —— iperf2 打印
+  `connect failed: No route to host`，看起来像 L3/线缆问题，实际只是服务端
+  防火墙没放行。ICMP echo 默认放行，所以 ping 全通、iperf 必挂。
+- 排查铁律：两端同时 `tcpdump -n '(arp or icmp or tcp port <p>)'`，谁回的
+  reject 一目了然。
+- 测试端口（iperf 5201 等）记得在服务端
+  `firewall-cmd --add-port=<p>/tcp`，测完 `--remove-port` 还原。
