@@ -53,10 +53,11 @@ else
 fi
 PW=$(cat /root/.oc_serve_pw)
 echo "== [6] service =="
-sed "s/__PW__/$PW/; s/__PORT__/$PORT/" /root/oc_stage_ocserve.service > /etc/systemd/system/ocserve.service
+sed "s/PLACEHOLDER/$PW/; s/__PORT__/$PORT/" /root/oc_stage_ocserve.service > /etc/systemd/system/ocserve.service
 chmod 600 /etc/systemd/system/ocserve.service
 systemctl daemon-reload
-systemctl enable --now ocserve.service 2>&1 | tail -1 || true
+systemctl enable ocserve.service 2>&1 | tail -1 || true
+systemctl restart ocserve.service
 sleep 3
 systemctl is-active ocserve.service || true
 echo "== [7] local health =="

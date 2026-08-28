@@ -16,7 +16,7 @@ KEY="$(tr -d ' \r\n' < "$KEYFILE")"
 
 for k in $(keys); do
   n="$(name_of "$k")"
-  STAGE="$(mktemp /tmp/oc_auth.XXXXXX)"
+  STAGE="$(mktemp -d /tmp/oc_auth.XXXXXX)"
   log "auth[$PROVIDER] -> $n"
   fetch "$k" "/root/.local/share/opencode/auth.json" "$STAGE/auth.json"
   KEY="$KEY" PROVIDER="$PROVIDER" STAGE="$STAGE" python3 - <<'PY'
