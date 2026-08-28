@@ -124,3 +124,45 @@ bash scripts/upgrade_opencode.sh https://github.com/sst/opencode/releases/latest
 - Watch a worker live: `tmux attach -t hub0` (or `wsl/hub0.sh` to rebuild).
 - Read A2A history: `ssh <worker> cat /root/ocws/oc_tasks/journal/a2a.jsonl`.
 - Collect evidence: `ssh <worker> cat /root/ocws/oc_tasks/journal/journal.jsonl`.
+
+## 8. Orchestrator-native tool (MCP)
+
+Install the dispatcher as a native tool in the orchestrator's own opencode so a
+task dispatch becomes one tool call instead of hand-written curl:
+
+1. The repo ships `orchestrator/mcp_remote_task.py` — a dependency-free MCP
+   stdio server (python3 stdlib, runs inside WSL) wrapping
+   `scripts/dispatch_task.sh`.
+2. Register it in the orchestrator's opencode config (global, or project
+   `.opencode/opencode.json`):
+
+```json
+{
+  "mcp": {
+    "oc": {
+      "type": "local",
+      "command": ["wsl.exe", "-d", "Debian", "--", "python3", "-u",
+                  "/mnt/<drive>/<path>/oc-cluster/orchestrator/mcp_remote_task.py"],
+      "enabled": true,
+      "timeout": 10000
+    }
+  }
+}
+```
+
+3. Restart opencode. The tool registers as `oc_remote_task(worker, task, prompt,
+   wait_seconds)`; `worker="list"` enumerates workers. Long tasks block the call
+   up to `wait_seconds` (default 300, cap 1800).
+
+Why MCP instead of a `.ts` custom tool: see docs/KNOWN_ISSUES.md #1 — project
+`.opencode/tools/*.ts` files hang `opencode serve` sessions (1.18.23/24). The
+MCP server runs out-of-process and is unaffected.
+
+Smoke test (no opencode needed):
+
+```bash
+printf '%s\n%s\n' \
+  '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}' \
+  '{"jsonrpc":"2.0","id":2,"method":"tools/list"}' \
+  | python3 -u orchestrator/mcp_remote_task.py
+```

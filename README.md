@@ -58,6 +58,9 @@ scripts/p4_e2e.sh         编排器 -> worker API 往返验证，带每 worker �
 scripts/p55_a2a.sh        渲染并推送每 worker 的 peers.json（A2A 目录）
 scripts/p6_drill.sh       记忆 journal 演练 + 隧道自愈演练
 scripts/upgrade_opencode.sh  滚动升级二进制，带备份+恢复
+scripts/dispatch_task.sh     编排器侧任务派发器（WSL）：建会话 + 阻塞式发 prompt
+orchestrator/mcp_remote_task.py  MCP stdio server：把派发暴露成编排器 opencode 的
+                             原生 `remote_task` 工具（跑在 WSL 内）
 wsl/tunnel.sh             单条反向 LLM 隧道循环（worker lo:443 -> LLM:443）
 wsl/tunnels_up.sh         每 worker 一条 detached tmux 隧道
 wsl/hub0.sh               Hub-0：attach TUI 窗格 + web UI 端口转发

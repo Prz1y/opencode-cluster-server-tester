@@ -117,3 +117,42 @@ bash scripts/upgrade_opencode.sh https://github.com/sst/opencode/releases/latest
 - 实时观察 worker：`tmux attach -t hub0`（或 `wsl/hub0.sh` 重建）。
 - 读 A2A 历史：`ssh <worker> cat /root/ocws/oc_tasks/journal/a2a.jsonl`。
 - 收集证据：`ssh <worker> cat /root/ocws/oc_tasks/journal/journal.jsonl`。
+
+## 8. 编排器原生工具（MCP）
+
+把派发器安装成编排器自己 opencode 的原生工具，派任务从手写 curl 变成一次工具调用：
+
+1. 仓库自带 `orchestrator/mcp_remote_task.py` —— 零依赖的 MCP stdio server
+   （python3 标准库，跑在 WSL 里），封装 `scripts/dispatch_task.sh`。
+2. 在编排器 opencode 配置（全局，或项目 `.opencode/opencode.json`）注册：
+
+```json
+{
+  "mcp": {
+    "oc": {
+      "type": "local",
+      "command": ["wsl.exe", "-d", "Debian", "--", "python3", "-u",
+                  "/mnt/<盘符>/<路径>/oc-cluster/orchestrator/mcp_remote_task.py"],
+      "enabled": true,
+      "timeout": 10000
+    }
+  }
+}
+```
+
+3. 重启 opencode。工具注册为 `oc_remote_task(worker, task, prompt,
+   wait_seconds)`；`worker="list"` 列出 worker。长任务阻塞至 `wait_seconds`
+   （默认 300，上限 1800）。
+
+为什么用 MCP 而不是 `.ts` 自定义工具：见 docs/KNOWN_ISSUES.md #1 —— 项目
+`.opencode/tools/*.ts` 会让 `opencode serve` 会话挂死（1.18.23/24）。MCP
+server 跑在独立进程，不受影响。
+
+冒烟测试（不需要 opencode）：
+
+```bash
+printf '%s\n%s\n' \
+  '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}' \
+  '{"jsonrpc":"2.0","id":2,"method":"tools/list"}' \
+  | python3 -u orchestrator/mcp_remote_task.py
+```

@@ -79,6 +79,9 @@ scripts/p4_e2e.sh         orchestrator->worker API roundtrip with per-worker mar
 scripts/p55_a2a.sh        render+push per-worker peers.json (A2A directory)
 scripts/p6_drill.sh       memory journal drill + tunnel self-heal drill
 scripts/upgrade_opencode.sh  rolling binary upgrade with backup+restore
+scripts/dispatch_task.sh     orchestrator-side task dispatcher (WSL): session + blocking prompt
+orchestrator/mcp_remote_task.py  MCP stdio server: exposes dispatch as a native `remote_task`
+                             tool for the orchestrator's own opencode (runs inside WSL)
 wsl/tunnel.sh             single reverse LLM tunnel loop (worker lo:443 -> LLM:443)
 wsl/tunnels_up.sh         one detached tmux tunnel per worker
 wsl/hub0.sh               Hub-0: attach TUI panes + web UI port forwards

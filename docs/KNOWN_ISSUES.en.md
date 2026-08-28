@@ -70,3 +70,31 @@ workers. Verify versions before assuming these still apply.
 - Watch out for shell-quoting pitfalls when driving workers through nested
   PowerShell -> wsl -> ssh layers: prefer the repo's script-file pattern
   (`ssh_put` + `ssh_cmd`) over inline one-liners.
+
+## 9. A WSL restart kills all tmux sessions (tunnels, hub, forwards)
+
+- The WSL VM may be recycled between uses; the tmux server dies with it, taking
+  down `tun_<NAME>` (LLM egress), `hub0` (attach TUI) and `fw_<NAME>` (web
+  forwards). Symptom: worker model calls fail with "Cannot connect to API" while
+  direct SSH still works; the worker has no `127.0.0.1:443` listener.
+- Recovery (idempotent): `bash wsl/tunnels_up.sh && bash wsl/hub0.sh`
+
+## 10. A p2 re-run must force-restart ocserve
+
+- `systemctl enable --now` does NOT restart an already-active service, so a P2
+  re-run that changed `opencode.json` or `auth.json` would leave the old process
+  serving stale config/auth. The P2 payload therefore does
+  `systemctl enable` + `systemctl restart` unconditionally.
+
+## 11. firewalld rejects closed ports in a misleading way (icmp-host-prohibited)
+
+- RHEL-family firewalld public zone REJECTs (does not silently drop) TCP to
+  closed ports with `ICMP host unreachable - admin prohibited filter`. The
+  connecting side turns that ICMP into EHOSTUNREACH — iperf2 prints
+  `connect failed: No route to host`, which looks like an L3/cabling problem
+  while it is just the server firewall. ICMP echo is allowed by default, hence
+  "ping fully works, iperf always fails".
+- Debug rule of thumb: run `tcpdump -n '(arp or icmp or tcp port <p>)'` on BOTH
+  ends; whoever emits the reject is obvious.
+- Remember to open test ports (iperf 5201 etc.) on the SERVER side with
+  `firewall-cmd --add-port=<p>/tcp` and remove the rule after the test.
