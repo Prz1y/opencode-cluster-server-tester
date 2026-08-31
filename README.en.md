@@ -93,7 +93,7 @@ worker/                   files pushed to workers (templates rendered at deploy)
 docs/                     architecture, deploy runbook, known issues
 ```
 
-## Secrets layout (all gitignored)
+## Secrets layout 
 
 | File | Purpose |
 |------|---------|
