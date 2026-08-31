@@ -88,4 +88,4 @@ docs/                     架构、部署手册、已知问题
 
 ## 许可证
 
-MIT — 见 [LICENSE](LICENSE)。
+GPLv3 — 见 [LICENSE](LICENSE)。
