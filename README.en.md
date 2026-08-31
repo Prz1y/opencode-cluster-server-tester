@@ -112,4 +112,4 @@ list before filing upstream bugs.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+GPLv3 — see [LICENSE](LICENSE).
